@@ -1,0 +1,37 @@
+#include <Arduino.h>
+
+//initialisation du capteur sur le pin A0 de l'arduino
+const int sensorPin = A0;  
+
+//variable de valeur du capteur brut
+int sensorValue = 0;
+
+//variable de valeur du capteur en pourcentage 
+int PurcentMoisture =0 ;
+
+//initialisation du moniteur série 
+void setup() {
+  Serial.begin(9600);
+}
+
+
+//boucle principale de l'application
+void loop() {
+  //lecture de la valeur du capteur et transformation en pourcentage
+  //230 correspond à la valeur minimal mesurée par le capteur
+  //550 correspond à la valeur maximal mesurée par le capteur
+  //100 correspond à la valeur maximale de humidité du sol en pourcentage
+  //0 correspond à la valeur minimale de humidité du sol en pourcentage
+  
+  sensorValue = analogRead(sensorPin);
+
+  PurcentMoisture = map (sensorValue, 230 , 550, 100, 0);
+
+  //affichage des données sur le moniteur série
+  Serial.println("humidité du sol :");
+  Serial.print(PurcentMoisture);
+  Serial.println("%");
+
+
+  delay(100); // delai de 100ms 
+}
