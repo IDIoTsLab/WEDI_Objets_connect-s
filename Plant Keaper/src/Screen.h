@@ -15,6 +15,12 @@ public:
     void setup();
     void loop();
 
+
+    void write(int space, String text,int value, String unite, bool TextOrNot);
+
+    void Clear();
+    void Display();
+
 private:
     // Constantes pour la configuration de l'écran
     #define SCREEN_WIDTH 128

@@ -14,26 +14,42 @@ void Screen::setup() {
     display.display();
 }
 
-void Screen::loop() {
+void Screen::Clear(){
     display.clearDisplay();
+}
 
-    // Dessin et affichage du texte
+void Screen::Display(){
+    display.display(); // Mise à jour de l'affichage
+}
+
+
+void Screen::loop() {
     display.drawRect(0, 0, 128, 16, WHITE); // Écran du haut
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(32, 5);
     display.println(F("Plant Keeper"));
-
-    display.setCursor(0, 17);
-    display.print(F("Humidite : "));
-    display.println("%");
-
-    display.setCursor(0, 25);
-    display.print(F("Luminosite : "));
-    display.println("%");
-
-    display.display(); // Mise à jour de l'affichage
 }
+
+
+
+void Screen::write(int space, String text, int value, String unite, bool TextOrNot){
+    int yPosition = 17 + (space * 8);
+    display.setCursor(0, yPosition);
+    display.print(text);
+
+
+
+    if (TextOrNot == false){
+        display.print(" : ");
+        display.print(value);
+        display.print(" ");
+        display.print(unite);
+    } 
+
+
+}
+
 
 Screen::~Screen() {
     // Destructeur, si des ressources sont à libérer

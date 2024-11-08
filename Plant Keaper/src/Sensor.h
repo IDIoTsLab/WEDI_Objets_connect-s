@@ -15,6 +15,10 @@ public:
     ~Sensor();
 
     int loop();
+    
+    int ReadMoisture();
+    int ReadLuminosity();
+    bool ReadWaterlevel();
 
     bool WaterLevel1 = false; 
 
@@ -22,6 +26,25 @@ private:
 
     const int PinWaterLevel1 = 34;
     int SensorWaterLevel1 = 0;  
+
+  //1200(3,3V), 230(5V) correspond à la valeur minimal mesurée par le capteur (imergée)
+  //3100(3,3V), 550(5V) correspond à la valeur maximal mesurée par le capteur (sec)
+    const int ValueMoistureSensorMin = 1200;
+    const int ValueMoistureSensorMax = 3100;
+
+    //
+    const int ValueLuminositySensorMin = 0;
+    const int ValueLuminositySensorMax = 4095;
+
+    //cofiguration des pins
+    const int sensorMoisturePin = 32;  
+    const int sensorLuminosityPin = 33;
+    
+
+    int sensorMoisture = 0;
+    int PurcentMoisture = 0;
+    int sensorLuminosity = 0;
+    int PurcentLuminosity = 0;
 
 
 };

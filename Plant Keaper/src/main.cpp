@@ -6,6 +6,7 @@
 #include "Sensor.h"
 #include "Screen.h"
 
+
 // Configuration de la communication I2C
 
 // Configuration de l'écran OLED
@@ -22,13 +23,10 @@ Screen screen;
 
 
 //configuration capteur d'humidité 
-const int sensorMoisturePin = 32;  
-const int sensorLuminosityPin = 33;
+//const int sensorMoisturePin = 32;  
+//const int sensorLuminosityPin = 33;
 
-int sensorMoisture = 0;
-int PurcentMoisture = 0;
-int sensorLuminosity = 0;
-int PurcentLuminosity = 0;
+
 
 //config PWN lampe
 int pwmChannelLight = 0; //Choisit le canal 0
@@ -44,10 +42,10 @@ int pwmPinPump = 4;
 
   //1200(3,3V), 230(5V) correspond à la valeur minimal mesurée par le capteur (imergée)
   //3100(3,3V), 550(5V) correspond à la valeur maximal mesurée par le capteur (sec)
-const int ValueMoistureSensorMin = 1200;
-const int ValueMoistureSensorMax = 3100;
-const int ValueLuminositySensorMin = 0;
-const int ValueLuminositySensorMax = 4095;
+//const int ValueMoistureSensorMin = 1200;
+//const int ValueMoistureSensorMax = 3100;
+//const int ValueLuminositySensorMin = 0;
+//const int ValueLuminositySensorMax = 4095;
 
 //Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -82,88 +80,32 @@ void setup() {
 
 }
 
-int ReadLuminosity(){
-  sensorLuminosity = analogRead(sensorLuminosityPin);
-  Serial.print ("Luminosity : ");
-  Serial.println(sensorLuminosity);
-
-
-  PurcentLuminosity = map (sensorLuminosity, ValueMoistureSensorMin , ValueLuminositySensorMax, 0, 100);
-
-
-return PurcentLuminosity;
-}
-
-int ReadMoisture(){
-
-  //lecture de la valeur du capteur et transformation en pourcentage
-  //100 correspond à la valeur maximale de humidité du sol en pourcentage
-  //0 correspond à la valeur minimale de humidité du sol en pourcentage
-  sensorMoisture = analogRead(sensorMoisturePin);
-  PurcentMoisture = map (sensorMoisture, ValueMoistureSensorMin , ValueMoistureSensorMax, 100, 0);
-
-  if (PurcentMoisture < 0) {
-    PurcentMoisture = 0;
-  }
-
-  if (PurcentMoisture > 100) {
-    PurcentMoisture = 100;
-  }
-
-  //affichage des données sur le moniteur série
-  Serial.println("humidité du sol :");
-  Serial.print("Valeur analogique : ");
-  Serial.println(sensorMoisture);
-  Serial.print("Valeur en % :");
-  Serial.print(PurcentMoisture);
-  Serial.println("%");
-  return PurcentMoisture;  
-}
 
 
 
 
 void loop() {
-  
-  //ReadMoisture();
-  //ReadLuminosity();
+  screen.Clear();
 
   sensor.loop();
   screen.loop();
-  //display.clearDisplay();  // Effacer l'écran à chaque boucle
+  screen.write(0,F("Humidite"), sensor.ReadMoisture(),"%",false);
+  screen.write(1,F("Luminosite"), sensor.ReadLuminosity(),"%",false);
+  if (sensor.ReadWaterlevel() == false ){
+    screen.write(2,F("Niveau d'eaux bas"),-1, " ", true);
+  }
+  else {
+    screen.write(2,F("Niveau d'eaux OK"),-1, " ", true);
+  }
+  
 
-  //test dev
-  //display.drawRect(0, 17, 128, 44, SSD1306_WHITE); //-> ecran du bas 
-  // hauteur de la police = 6
-
-
-
-
-
-
-  //patie supértieur de l'écran (jaune)
+  screen.Display();
   
 
 
 
-  //partie inférieur de l'écran (bleu)
-  /*
-  display.setTextSize(1);  
-  display.setCursor(0, 17);
-  display.print(F("Humidite : "));
-  display.print(PurcentMoisture);
-  display.println("%");
 
-  display.setCursor(0, 25);
-  display.print(F("Luminosite : "));
-  display.print(PurcentLuminosity);
-  display.println("%");
-
-
-  display.display(); // Affiche le contenu à l'écran
-  */
-  
-  if (PurcentLuminosity < 50 ) {
+  if (sensor.ReadLuminosity() < 50 ) {
     delay(500);
     ledcWrite(pwmChannelLight, 255); 
   }
@@ -174,7 +116,7 @@ void loop() {
 
 
 
-  if (PurcentMoisture < 50 ){
+  if (sensor.ReadMoisture() < 50 ){
     ledcWrite(pwmChannelPump, 150); 
 
   }
@@ -185,8 +127,7 @@ void loop() {
 
 
 
-
-delay(50);
+delay(10);
 
 
 }
