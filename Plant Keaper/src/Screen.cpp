@@ -33,7 +33,7 @@ void Screen::loop() {
 
 
 
-void Screen::write(int space, String text, int value, String unite, bool TextOrNot){
+void Screen::write(int space, String text, float value, String unite, bool TextOrNot){
     int yPosition = 17 + (space * 8);
     display.setCursor(0, yPosition);
     display.print(text);

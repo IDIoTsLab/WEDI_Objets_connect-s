@@ -16,7 +16,7 @@ public:
     void loop();
 
 
-    void write(int space, String text,int value, String unite, bool TextOrNot);
+    void write(int space, String text,float value, String unite, bool TextOrNot);
 
     void Clear();
     void Display();

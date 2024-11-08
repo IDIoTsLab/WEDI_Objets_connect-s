@@ -89,13 +89,17 @@ void loop() {
 
   sensor.loop();
   screen.loop();
-  screen.write(0,F("Humidite"), sensor.ReadMoisture(),"%",false);
+  screen.write(0,F("Humidite(P)"), sensor.ReadMoisture(),"%",false);
   screen.write(1,F("Luminosite"), sensor.ReadLuminosity(),"%",false);
+  screen.write(2,F("temperature"), sensor.ReadTemperature(),"C",false);
+  screen.write(3,F("humidite"), sensor.ReadHumidity(),"%",false);
+
+
   if (sensor.ReadWaterlevel() == false ){
-    screen.write(2,F("Niveau d'eaux bas"),-1, " ", true);
+    screen.write(4,F("--Niveau d'eaux bas--"),-1, " ", true);
   }
   else {
-    screen.write(2,F("Niveau d'eaux OK"),-1, " ", true);
+    screen.write(4,F("Niveau d'eaux OK"),-1, " ", true);
   }
   
 
@@ -127,7 +131,7 @@ void loop() {
 
 
 
-delay(10);
+delay(100);
 
 
 }

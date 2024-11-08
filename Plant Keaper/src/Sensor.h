@@ -5,6 +5,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <DHT.h>
 
 #pragma once
 
@@ -21,10 +22,12 @@ public:
     bool ReadWaterlevel();
 
     bool WaterLevel1 = false; 
+    float ReadTemperature();
+    float ReadHumidity();
 
 private:
+    DHT dht; 
 
-    const int PinWaterLevel1 = 34;
     int SensorWaterLevel1 = 0;  
 
   //1200(3,3V), 230(5V) correspond à la valeur minimal mesurée par le capteur (imergée)
@@ -39,7 +42,8 @@ private:
     //cofiguration des pins
     const int sensorMoisturePin = 32;  
     const int sensorLuminosityPin = 33;
-    
+    const int PinWaterLevel1 = 34;
+    const int DHTPin = 21; 
 
     int sensorMoisture = 0;
     int PurcentMoisture = 0;
