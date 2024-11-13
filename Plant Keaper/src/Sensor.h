@@ -7,6 +7,9 @@
 #include <Adafruit_SSD1306.h>
 #include <DHT.h>
 
+#define DHTPIN 17
+#define DHTTYPE DHT11
+
 #pragma once
 
 class Sensor
@@ -43,7 +46,6 @@ private:
     const int sensorMoisturePin = 32;  
     const int sensorLuminosityPin = 33;
     const int PinWaterLevel1 = 34;
-    const int DHTPin = 21; 
 
     int sensorMoisture = 0;
     int PurcentMoisture = 0;

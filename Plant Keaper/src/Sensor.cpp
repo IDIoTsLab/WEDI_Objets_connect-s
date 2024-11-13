@@ -1,9 +1,8 @@
 #include "Sensor.h"
 
 
-#define DHTTYPE DHT11
 Sensor::Sensor() 
-    : dht(DHTPin, DHTTYPE)  // Initialisation de l'objet DHT avec la broche et le type de capteur
+    : dht(DHTPIN, DHTTYPE)  // Initialisation de l'objet DHT avec la broche et le type de capteur
 {
     dht.begin();  // Initialiser le capteur DHT
 }
@@ -73,7 +72,6 @@ float Sensor::ReadTemperature() {
     // Lecture de la température en degrés Celsius
     float temperature = dht.readTemperature();
     return temperature;
-    delay(100);
 }
 
 
@@ -81,7 +79,6 @@ float Sensor::ReadHumidity() {
     // Lecture de l'humidité en pourcentage
     float humidity = dht.readHumidity();
     return humidity;
-    delay(100);
 }
 
 
