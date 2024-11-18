@@ -2,16 +2,19 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <WiFi.h>
 
 #include "Sensor.h"
 #include "Screen.h"
 #include "Device.h"
+#include "WebServerESP.h"
 
 
 
 Sensor sensor;
 Screen screen;
 Device device;
+WebServerESP webServer;
 
 
 
@@ -24,6 +27,9 @@ void setup() {
   Serial.begin(115200);
   screen.setup();
   device.setup();
+ // webServer.setup();
+  //screen.QRcode("Nino");
+  //delay(10000);
 
 
 
@@ -39,6 +45,7 @@ void loop() {
   sensor.loop();
   screen.loop();
   device.loop();
+  //webServer.loop();
 
 
   screen.write(0,F("Humidite(P)"), sensor.ReadMoisture(),F("%"),false);
@@ -67,8 +74,6 @@ void loop() {
     delay(1000);
     device.pump(0);
   }
-
-
 
 
 

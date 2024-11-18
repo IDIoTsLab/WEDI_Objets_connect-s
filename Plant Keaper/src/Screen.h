@@ -5,6 +5,8 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include "qrcode.h"
+
 
 class Screen
 {
@@ -20,6 +22,8 @@ public:
 
     void Clear();
     void Display();
+
+    void QRcode(const char *text);
 
 private:
     // Constantes pour la configuration de l'écran
