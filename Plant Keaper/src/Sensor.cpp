@@ -26,7 +26,7 @@ int Sensor::ReadMoisture() {
   if (PurcentMoisture > 100) {
     PurcentMoisture = 100;
   }
-
+/*
   //affichage des données sur le moniteur série
   Serial.print("humidité du sol : ");
   Serial.print("Valeur analogique : ");
@@ -34,20 +34,22 @@ int Sensor::ReadMoisture() {
   Serial.print("  Valeur en % : ");
   Serial.print(PurcentMoisture);
   Serial.println("%");
+  */
   return PurcentMoisture;  
+  
 }
 
 int Sensor::ReadLuminosity() {
   sensorLuminosity = analogRead(sensorLuminosityPin);
   PurcentLuminosity = map (sensorLuminosity, ValueMoistureSensorMin , ValueLuminositySensorMax, 0, 100);
-
+/*
   Serial.print ("Luminosity : ");
     Serial.print("Valeur analogique : ");
   Serial.print(sensorLuminosity);       
   Serial.print("  Valeur en % : ");
   Serial.print(PurcentLuminosity);
   Serial.println("%");
-
+*/
 
 
 return PurcentLuminosity;
@@ -55,6 +57,7 @@ return PurcentLuminosity;
 
 bool Sensor::ReadWaterlevel() {
     SensorWaterLevel1 = analogRead(PinWaterLevel1);
+/*
     Serial.print("Valeur capteur 1 : ");
     Serial.println(SensorWaterLevel1);
 
@@ -65,6 +68,7 @@ bool Sensor::ReadWaterlevel() {
         WaterLevel1 = false;
         Serial.println("////Niveau d'eau insuffisant////");
     }
+*/
     return WaterLevel1;
 }
 
@@ -83,8 +87,24 @@ float Sensor::ReadHumidity() {
 
 
 
+/*
+int Sensor::GetPurcentMoisture(){
+  return PurcentMoisture;  
+}
 
-
+int Sensor::GetHumidity(){
+  return humidity;
+}
+int Sensor::GetTemperature(){
+  return temperature;  
+}
+int Sensor::GetPurcentLuminosity(){
+  return PurcentLuminosity;
+}
+bool Sensor::GetWaterlevel(){
+  return WaterLevel1;
+}
+*/
 
 
 

@@ -81,7 +81,7 @@ void Screen::QRcode(const char *text){
 
             // Print each module (UTF-8 \u2588 is a solid block)
             Serial.print(qrcode_getModule(&qrcode, x, y) ? "\u2588\u2588": "  ");
-
+  
         }
 
         Serial.print("\n");

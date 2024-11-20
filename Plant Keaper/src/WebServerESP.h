@@ -5,27 +5,34 @@
 #include <WiFi.h>
 #include <Wire.h>
 
+#include "Sensor.h"
+
 class WebServerESP {
 public:
-    String setup();
-    void loop();
+    void setup(); // Initialisation du Wi-Fi et du serveur
+    void loop();  // Boucle principale pour gérer les clients
 
 private:
     WiFiServer server = WiFiServer(80); // Objet serveur
+    WiFiClient client;                  // Client en cours de traitement
+    String currentLine = "";            // Ligne courante lue
+
     const char* ssid = "IDIoTsLab_Team";
     const char* password = "IDIoTsLab4members";
 
-    // Variables pour gérer les ressources
     int humiditeSol = 0;
     int lumiere = 0;
 
-    // Variables pour la gestion du temps
     unsigned long currentTime = 0;
     unsigned long previousTime = 0;
-    const long timeoutTime = 2000;
+    const unsigned long timeoutTime = 2000;
 
-    // Pour stocker la requête HTTP
     String header;
+
+    bool isNewClient = false; // Indique si un client est nouveau
+
+    void sendResponse(String luminosite, String humidite, String humiditeSol, String temperature, String waterLevel);
+    void handleClientRequest(const String& header); // Méthode pour traiter les requêtes
 };
 
 #endif

@@ -27,9 +27,10 @@ void setup() {
   Serial.begin(115200);
   screen.setup();
   device.setup();
- // webServer.setup();
-  //screen.QRcode("Nino");
-  //delay(10000);
+  webServer.setup();
+  Serial.println("");
+  screen.QRcode("Nino");
+  delay(10000);
 
 
 
@@ -45,7 +46,7 @@ void loop() {
   sensor.loop();
   screen.loop();
   device.loop();
-  //webServer.loop();
+  webServer.loop();
 
 
   screen.write(0,F("Humidite(P)"), sensor.ReadMoisture(),F("%"),false);

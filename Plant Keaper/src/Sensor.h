@@ -28,6 +28,8 @@ public:
     float ReadTemperature();
     float ReadHumidity();
 
+
+
 private:
     DHT dht; 
 
