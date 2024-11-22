@@ -12,6 +12,8 @@ public:
     void setup(); // Initialisation du Wi-Fi et du serveur
     void loop();  // Boucle principale pour gérer les clients
 
+    String GetAddress();
+
 private:
     WiFiServer server = WiFiServer(80); // Objet serveur
     WiFiClient client;                  // Client en cours de traitement

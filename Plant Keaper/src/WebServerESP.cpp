@@ -21,9 +21,18 @@ void WebServerESP::setup() {
 
     // Démarrer le serveur
     server.begin();
-   // return AdresseIP;
-}
+   //return AdresseIP;
 
+}
+String WebServerESP::GetAddress() {
+    if (WiFi.status() == WL_CONNECTED) {
+        Serial.print("Adresse IP dans le GET :  ");
+        Serial.println(WiFi.localIP());
+        return "http://" + WiFi.localIP().toString(); // Convertit l'adresse IP en une URL complète
+    } else {
+        return "http://0.0.0.0"; // Retourne une adresse par défaut si le Wi-Fi n'est pas connecté
+    }
+}
 
 void WebServerESP::loop() {
     // Vérifie si un nouveau client est disponible

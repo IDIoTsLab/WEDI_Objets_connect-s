@@ -52,43 +52,47 @@ void Screen::write(int space, String text, float value, String unite, bool TextO
 }
 
 
-void Screen::QRcode(const char *text){
-
-    // Start time
+void Screen::QRcode(const char *text) {
+    // Démarrer le chronométrage
     uint32_t dt = millis();
-  
-    // Create the QR code
+
+    // Créer le QR code avec une version adaptée (par exemple, version 2)
     QRCode qrcode;
-    uint8_t qrcodeData[qrcode_getBufferSize(3)];
-    qrcode_initText(&qrcode, qrcodeData, 3, 0, text);
-  
-    // Delta time
+    uint8_t qrcodeData[qrcode_getBufferSize(2)]; // Version 2 pour une taille réduite
+    qrcode_initText(&qrcode, qrcodeData, 2, 0, text);
+
+    // Temps de génération
     dt = millis() - dt;
     Serial.print("QR Code Generation Time: ");
-    Serial.print(dt);
-    Serial.print("\n");
+    Serial.println(dt);
 
-    // Top quiet zone
-    Serial.print("\n\n\n\n");
+    // Effacer l'écran pour afficher uniquement le QR code
+    display.clearDisplay();
 
+    // Taille des pixels d'un module QR code à l'écran
+    const int pixelSize = 2; // Taille de chaque "case" du QR code en pixels
+    const int offsetX = (SCREEN_WIDTH - (qrcode.size * pixelSize)) / 2; // Centrer horizontalement
+    const int offsetY = 14; // Début de l'affichage à partir de la ligne 17
+
+    // Dessiner le QR code module par module
     for (uint8_t y = 0; y < qrcode.size; y++) {
-
-        // Left quiet zone
-        Serial.print("        ");
-
-        // Each horizontal module
         for (uint8_t x = 0; x < qrcode.size; x++) {
-
-            // Print each module (UTF-8 \u2588 is a solid block)
-            Serial.print(qrcode_getModule(&qrcode, x, y) ? "\u2588\u2588": "  ");
-  
+            if (qrcode_getModule(&qrcode, x, y)) {
+                // Dessiner un carré pour chaque module "rempli"
+                int drawY = offsetY + y * pixelSize;
+                if (drawY + pixelSize <= SCREEN_HEIGHT) { // Ne pas dépasser l'écran
+                    display.fillRect(offsetX + x * pixelSize, drawY, pixelSize, pixelSize, WHITE);
+                }
+            }
         }
-
-        Serial.print("\n");
     }
 
-    // Bottom quiet zone
-    Serial.print("\n\n\n\n");}
+    // Mettre à jour l'écran pour afficher le QR code
+    display.display();
+}
+
+
+
 
 Screen::~Screen() {
     // Destructeur, si des ressources sont à libérer

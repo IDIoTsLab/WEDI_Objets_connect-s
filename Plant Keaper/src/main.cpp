@@ -29,8 +29,12 @@ void setup() {
   device.setup();
   webServer.setup();
   Serial.println("");
-  screen.QRcode("Nino");
-  delay(10000);
+  String fullAddress = webServer.GetAddress();
+  screen.QRcode(fullAddress.c_str());
+  Serial.println();
+  Serial.println(fullAddress);
+  webServer.loop();
+  delay(60000);
 
 
 
