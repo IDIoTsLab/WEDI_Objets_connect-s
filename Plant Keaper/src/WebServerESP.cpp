@@ -2,17 +2,20 @@
 #include "sensor.h"
 
 Sensor SensorManager;
-
-void WebServerESP::setup() {
+void WebServerESP::setup(String SSID, String Password) {
     // Connexion au Wi-Fi
+    delay(500);
     Serial.print("Connexion à ");
-    Serial.println(ssid);
-    WiFi.begin(ssid, password);
+    Serial.println(SSID);
+    WiFi.begin(SSID, Password);
 
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
         Serial.print(".");
     }
+
+
+    
 
     Serial.println("\nWiFi connecté !");
     Serial.print("Adresse IP : ");
@@ -104,7 +107,7 @@ void WebServerESP::sendResponse(String luminosite, String humidite, String humid
     client.println("<style>");
     client.println("html, body { height: 100%; margin: 0; font-family: Helvetica; }");
     client.println("body { display: flex; justify-content: center; align-items: center; ");
-    client.println("background-image: url('https://static.vecteezy.com/system/resources/previews/001/594/562/non_2x/organic-plant-green-background-free-vector.jpg');"); // URL externe ici
+    client.println("background-image: url('https://github.com/IDIoTsLab/WEDI_Objets_connectes/blob/main/Plant%20Keaper/Background_plant-Keaper.JPEG?raw=true');"); // URL externe ici
     client.println("background-size: cover; background-position: center; color: white; text-align: center; }");
     client.println(".content { background: rgba(0, 0, 0, 0.6); padding: 20px; border-radius: 10px; }");
     client.println(".button { background-color: #4CAF50; color: white; padding: 15px; margin: 5px; font-size: 20px; cursor: pointer; border: none; border-radius: 5px; }");
@@ -141,17 +144,30 @@ void WebServerESP::sendResponse(String luminosite, String humidite, String humid
 
 void WebServerESP::handleClientRequest(const String& header) {
     if (header.indexOf("GET /update?") >= 0) {
-        // Extraire les valeurs de la requête
+        // Extraire les valeurs des paramètres en utilisant des index précis
         int humiditeIndex = header.indexOf("humidite=") + 10;
         int lumiereIndex = header.indexOf("lumiere=") + 8;
 
-        String humiditeStr = header.substring(humiditeIndex, header.indexOf("&", humiditeIndex));
-        String lumiereStr = header.substring(lumiereIndex, header.indexOf(" ", lumiereIndex));
+        String humiditeStr;
+        String lumiereStr;
 
+        // Vérifier si `humidite` est suivi d'un `&`
+        if (header.indexOf("&", humiditeIndex) != -1) {
+            humiditeStr = header.substring(humiditeIndex, header.indexOf("&", humiditeIndex));
+        } else {
+            humiditeStr = header.substring(humiditeIndex, header.indexOf(" ", humiditeIndex));
+        }
+
+        // Extraire `lumiere` (fin après espace ou autre délimiteur)
+        lumiereStr = header.substring(lumiereIndex, header.indexOf(" ", lumiereIndex));
+
+        // Convertir les valeurs extraites en entiers
         humiditeSol = humiditeStr.toInt();
         lumiere = lumiereStr.toInt();
 
+        // Afficher les valeurs pour vérification
         Serial.println("Humidité du sol choisie : " + String(humiditeSol) + "%");
         Serial.println("Lumière choisie : " + String(lumiere));
     }
 }
+

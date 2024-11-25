@@ -9,7 +9,7 @@
 
 class WebServerESP {
 public:
-    void setup(); // Initialisation du Wi-Fi et du serveur
+    void setup(String SSID, String Password); // Initialisation du Wi-Fi et du serveur
     void loop();  // Boucle principale pour gérer les clients
 
     String GetAddress();

@@ -8,7 +8,9 @@
 #include "Screen.h"
 #include "Device.h"
 #include "WebServerESP.h"
+#include "WifiConfig.h"
 
+WifiConfig wifiConfig("Plant Keaper", "12345678");
 
 
 Sensor sensor;
@@ -21,22 +23,33 @@ WebServerESP webServer;
 
 
 
-
 void setup() {
-  // Initialisation du moniteur série pour le débogage
   Serial.begin(115200);
   screen.setup();
   device.setup();
-  webServer.setup();
-  Serial.println("");
+  screen.TopScreen(F("Web Config, go to:"),13, false); // texte + decallage horizontal
+  screen.QRcode("http://192.168.1.1"); 
+  screen.Display();
+  wifiConfig.begin();
+  
+String NomWifi = (wifiConfig.GetSSID());
+
+String PasswordWifi = (wifiConfig.GetPassword());
+
+Serial.println("Nom Wifi : " + NomWifi);
+Serial.println("Mot de passe Wifi : " + PasswordWifi);
+
+wifiConfig.stopServer();
+delay(1000);
+ webServer.setup(NomWifi,PasswordWifi);
+ webServer.loop();
+
   String fullAddress = webServer.GetAddress();
+  screen.Clear();
+  screen.TopScreen(F("Server Web :"),32,false); 
   screen.QRcode(fullAddress.c_str());
-  Serial.println();
   Serial.println(fullAddress);
-  webServer.loop();
-  delay(60000);
-
-
+  delay(5000);
 
 }
 
@@ -48,11 +61,9 @@ void loop() {
   screen.Clear();
 
   sensor.loop();
-  screen.loop();
+  screen.TopScreen(F("Plant Keaper"),32,true);
   device.loop();
-  webServer.loop();
-
-
+  webServer.loop();  
   screen.write(0,F("Humidite(P)"), sensor.ReadMoisture(),F("%"),false);
   screen.write(1,F("Luminosite"), sensor.ReadLuminosity(),F("%"),false);
   screen.write(2,F("temperature"), sensor.ReadTemperature(),F("C"),false);
@@ -79,8 +90,6 @@ void loop() {
     delay(1000);
     device.pump(0);
   }
-
-
 
 
 delay(100);

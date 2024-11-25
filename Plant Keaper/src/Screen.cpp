@@ -24,14 +24,19 @@ void Screen::Display(){
 }
 
 
-void Screen::loop() {
-    display.drawRect(0, 0, 128, 16, WHITE); // Écran du haut
+void Screen::TopScreen(String Text, int offset, bool frame) {
+    if (frame == true) {
+        display.drawRect(0, 0, 128, 16, WHITE);
+        display.setCursor(offset, 5);
+        }
+    else {
+        display.setCursor(offset, 0);
+    }
+    
     display.setTextSize(1);
     display.setTextColor(WHITE);
-    display.setCursor(32, 5);
-    display.println(F("Plant Keeper"));
+    display.println(Text);
 }
-
 
 
 void Screen::write(int space, String text, float value, String unite, bool TextOrNot){
@@ -67,7 +72,7 @@ void Screen::QRcode(const char *text) {
     Serial.println(dt);
 
     // Effacer l'écran pour afficher uniquement le QR code
-    display.clearDisplay();
+    //display.clearDisplay();
 
     // Taille des pixels d'un module QR code à l'écran
     const int pixelSize = 2; // Taille de chaque "case" du QR code en pixels

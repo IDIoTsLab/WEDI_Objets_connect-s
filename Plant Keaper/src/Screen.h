@@ -15,7 +15,7 @@ public:
     ~Screen();
 
     void setup();
-    void loop();
+    void TopScreen(String text,int offset, bool frame);
 
 
     void write(int space, String text,float value, String unite, bool TextOrNot);
