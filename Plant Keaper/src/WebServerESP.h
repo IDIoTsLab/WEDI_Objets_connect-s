@@ -14,6 +14,9 @@ public:
 
     String GetAddress();
 
+    int GetHumidity();
+    int GetLight();
+
 private:
     WiFiServer server = WiFiServer(80); // Objet serveur
     WiFiClient client;                  // Client en cours de traitement
@@ -22,8 +25,8 @@ private:
     const char* ssid = "IDIoTsLab_Team";
     const char* password = "IDIoTsLab4members";
 
-    int humiditeSol = 0;
-    int lumiere = 0;
+    int humiditeSolChoisie = 0;
+    int lumiereChoisie = 0;
 
     unsigned long currentTime = 0;
     unsigned long previousTime = 0;

@@ -107,7 +107,7 @@ void WebServerESP::sendResponse(String luminosite, String humidite, String humid
     client.println("<style>");
     client.println("html, body { height: 100%; margin: 0; font-family: Helvetica; }");
     client.println("body { display: flex; justify-content: center; align-items: center; ");
-    client.println("background-image: url('https://github.com/IDIoTsLab/WEDI_Objets_connectes/blob/main/Plant%20Keaper/Background_plant-Keaper.JPEG?raw=true');"); // URL externe ici
+    client.println("background-image: url('https://github.com/IDIoTsLab/WEDI_Objets_connectes/blob/main/Plant%20Keaper/Background_plant-Keaper-1mo.jpg?raw=true');"); // URL externe ici
     client.println("background-size: cover; background-position: center; color: white; text-align: center; }");
     client.println(".content { background: rgba(0, 0, 0, 0.6); padding: 20px; border-radius: 10px; }");
     client.println(".button { background-color: #4CAF50; color: white; padding: 15px; margin: 5px; font-size: 20px; cursor: pointer; border: none; border-radius: 5px; }");
@@ -125,13 +125,13 @@ void WebServerESP::sendResponse(String luminosite, String humidite, String humid
         client.println("<option value=\"" + String(i) + "\">" + String(i) + "%</option>");
     }
     client.println("</select>");
-    client.println("<p>Lumière choisie : <span id=\"lumiereValue\">500</span></p>");
-    client.println("<input type=\"range\" name=\"lumiere\" min=\"500\" max=\"50000\" value=\"500\" step=\"500\" class=\"slider\" oninput=\"updateValue('lumiereValue', this.value)\">");
+    client.println("<p>Lumière choisie : <span id=\"lumiereValue\">0</span>%</p>");
+    client.println("<input type=\"range\" name=\"lumiere\" min=\"0\" max=\"100\" value=\"0\" step=\"1\" class=\"slider\" oninput=\"updateValue('lumiereValue', this.value)\">");
     client.println("<br><br><button class=\"button\" type=\"submit\">Mettre à jour</button>");
     client.println("</form>");
 
     // Section des statistiques de la plante
-    client.println("<h2>Statistiques de la plante</h2>");
+    client.println("<h2>Dernière donnée de la plante</h2>");
     client.println("<p>Luminosité actuelle : <span id=\"currentLuminosite\">" + String(luminosite) + "</span>%</p>");
     client.println("<p>Humidité actuelle : <span id=\"currentHumidite\">" + String(humidite) + "</span>%</p>");
     client.println("<p>Humidité du sol : <span id=\"currentHumiditeSol\">" + String(humiditeSol) + "</span>%</p>");
@@ -144,30 +144,51 @@ void WebServerESP::sendResponse(String luminosite, String humidite, String humid
 
 void WebServerESP::handleClientRequest(const String& header) {
     if (header.indexOf("GET /update?") >= 0) {
-        // Extraire les valeurs des paramètres en utilisant des index précis
-        int humiditeIndex = header.indexOf("humidite=") + 10;
-        int lumiereIndex = header.indexOf("lumiere=") + 8;
+        // Extraire les paramètres après "/update?"
+        int paramsIndex = header.indexOf("/update?") + 8; // 8 pour ignorer "/update?"
+        String params = header.substring(paramsIndex, header.indexOf(" ", paramsIndex));
 
-        String humiditeStr;
-        String lumiereStr;
+        // Initialiser les valeurs par défaut
+        humiditeSolChoisie = 0;
+        lumiereChoisie = 0;
 
-        // Vérifier si `humidite` est suivi d'un `&`
-        if (header.indexOf("&", humiditeIndex) != -1) {
-            humiditeStr = header.substring(humiditeIndex, header.indexOf("&", humiditeIndex));
-        } else {
-            humiditeStr = header.substring(humiditeIndex, header.indexOf(" ", humiditeIndex));
+        // Décomposer les paramètres en paires clé=valeur
+        while (params.length() > 0) {
+            int separatorIndex = params.indexOf("=");
+            int nextParamIndex = params.indexOf("&");
+
+            if (separatorIndex == -1) break; // Pas de séparateur trouvé
+
+            String key = params.substring(0, separatorIndex); // Clé avant '='
+            String value;
+
+            // Si pas d'autre paramètre, récupérer jusqu'à la fin
+            if (nextParamIndex == -1) {
+                value = params.substring(separatorIndex + 1);
+                params = ""; // Fin de parsing
+            } else {
+                value = params.substring(separatorIndex + 1, nextParamIndex);
+                params = params.substring(nextParamIndex + 1);
+            }
+
+            // Traiter les paramètres spécifiques
+            if (key == "humidite") {
+                humiditeSolChoisie = value.toInt();
+                //Serial.println("Paramètre humidite extrait : " + value);
+            } else if (key == "lumiere") {
+                lumiereChoisie = value.toInt();
+                //Serial.println("Paramètre lumiere extrait : " + value);
+            }
         }
 
-        // Extraire `lumiere` (fin après espace ou autre délimiteur)
-        lumiereStr = header.substring(lumiereIndex, header.indexOf(" ", lumiereIndex));
-
-        // Convertir les valeurs extraites en entiers
-        humiditeSol = humiditeStr.toInt();
-        lumiere = lumiereStr.toInt();
-
         // Afficher les valeurs pour vérification
-        Serial.println("Humidité du sol choisie : " + String(humiditeSol) + "%");
-        Serial.println("Lumière choisie : " + String(lumiere));
+        Serial.println("Humidité du sol choisie : " + String(humiditeSolChoisie) + "%");
+        Serial.println("Lumière choisie : " + String(lumiereChoisie));
     }
 }
-
+int WebServerESP::GetHumidity(){
+    return humiditeSolChoisie;
+}
+int WebServerESP::GetLight(){
+    return lumiereChoisie;
+}

@@ -57,18 +57,18 @@ return PurcentLuminosity;
 
 bool Sensor::ReadWaterlevel() {
     SensorWaterLevel1 = analogRead(PinWaterLevel1);
-/*
-    Serial.print("Valeur capteur 1 : ");
-    Serial.println(SensorWaterLevel1);
+
+    //Serial.print("Valeur capteur 1 : ");
+    //Serial.println(SensorWaterLevel1);
 
     if(SensorWaterLevel1 < 4000) {
         WaterLevel1 = true;
 
     } else {
         WaterLevel1 = false;
-        Serial.println("////Niveau d'eau insuffisant////");
+        //Serial.println("////Niveau d'eau insuffisant////");
     }
-*/
+
     return WaterLevel1;
 }
 

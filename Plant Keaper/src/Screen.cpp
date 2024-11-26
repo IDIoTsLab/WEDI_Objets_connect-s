@@ -102,3 +102,6 @@ void Screen::QRcode(const char *text) {
 Screen::~Screen() {
     // Destructeur, si des ressources sont à libérer
 }
+
+
+
