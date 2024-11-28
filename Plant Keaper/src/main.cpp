@@ -21,6 +21,7 @@ Device device;
 WebServerESP webServer;
 SystemTime Time;
 
+//int initialisation = false;
 bool Jour = false;
 int LumiereChoisie = 0;
 int HumiditeSolChoisie = 0;
@@ -28,8 +29,8 @@ int LumiereActuelle = 0;
 int HumiditeActuelle = 0;
 bool Waterlevel = false;
 
-
-
+unsigned long previousMillis = 0; // Stocke le dernier temps enregistré
+const long interval = 1000; // Intervalle en millisecondes (1 seconde)
 
 
 
@@ -37,6 +38,10 @@ void setup() {
   Serial.begin(115200);
   screen.setup();
   device.setup();
+  screen.drawImageFromBitmapScaled();
+  delay(5000);
+  screen.Clear();
+  screen.drawImageFromBitmap();
   screen.TopScreen(F("Web Config, go to:"),13, false); // texte + decallage horizontal
   screen.QRcode("http://192.168.1.1"); 
   screen.Display();
@@ -60,7 +65,6 @@ delay(1000);
   screen.QRcode(fullAddress.c_str());
   Serial.println(fullAddress);
   delay(5000);
-
   Time.Setup();
 
 
